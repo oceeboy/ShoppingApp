@@ -1,20 +1,88 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { CartProvider } from "./context/CartContext";
+import ProductPage from "./screens/ProductPage";
+import CheckoutScreen from "./screens/CheckoutScreen";
+import TabIcon from "./components/TabIcon";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import OrderSuccessScreen from "./screens/OrderSuccessScreen";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const Tab = createBottomTabNavigator();
+
+function MainNavigator() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Main"
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OrderSuccess"
+        component={OrderSuccessScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function BottomTabNavigator() {
+  const screenOptions = {
+    tabBarShowLabel: false,
+
+    tabBarActiveTintColor: "#049EFE",
+    tabBarInactiveTintColor: "#617078",
+
+    tabBarStyle: {
+      backgroundColor: "#fff",
+      height: 100,
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      left: 0,
+      elevation: 0,
+      zindex: 1,
+    },
+  };
+  return (
+    <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen
+        name="Products"
+        component={ProductPage}
+        options={{
+          title: "Products",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon name="Products" color={color} focused={focused} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Checkout"
+        component={CheckoutScreen}
+        options={{
+          title: "Checkout",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon name="Checkout" color={color} focused={focused} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <NavigationContainer>
+        <MainNavigator />
+      </NavigationContainer>
+    </CartProvider>
+  );
+}

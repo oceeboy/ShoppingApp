@@ -92,3 +92,9 @@ Follow these steps to set up the project locally:
 ## Appetize (Demo Link)
 
 [Click here View](https://appetize.io/app/b_4tvndih3fvpmljhvmjtk6ciceu)
+
+## Acknowledgements
+
+- [**React Native Documentation**](https://reactnative.dev/)
+- [**Expo Documentation**](https://docs.expo.dev/)
+- [**HNG Internship**](https://hng.tech/)
