@@ -5,12 +5,20 @@ const ProductItem = ({ item, onAdd }) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={item.image} style={styles.image} resizeMode="contain" />
+        {item.photos.length > 0 && (
+          <Image
+            source={{
+              uri: `https://api.timbu.cloud/images/${item.photos[0].url}`,
+            }}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        )}
       </View>
       <View style={styles.detailsContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.price}>${item.price}</Text>
+          <Text style={styles.price}>${item.current_price[0].NGN[0]}</Text>
         </View>
         <TouchableOpacity style={styles.button} onPress={() => onAdd(item)}>
           <Text style={styles.buttonText}>Add to Cart</Text>

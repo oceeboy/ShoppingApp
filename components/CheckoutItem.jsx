@@ -7,14 +7,16 @@ const CheckoutItem = ({ item, onRemove }) => {
       <View style={styles.itemDetails}>
         <View style={styles.imageContainer}>
           <Image
-            source={item.image}
+            source={{
+              uri: `https://api.timbu.cloud/images/${item.photos[0].url}`,
+            }}
             style={styles.image}
             resizeMode="contain"
           />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemPrice}>${item.price}</Text>
+          <Text style={styles.itemPrice}>${item.current_price[0].NGN[0]}</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>

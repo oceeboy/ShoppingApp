@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,37 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CartContext } from "../context/CartContext";
 import ProductItem from "../components/ProductItem";
-import { products } from "../constants";
+// import { products } from "../constants";
 import icons from "../constants/icons";
 import { useNavigation } from "@react-navigation/native";
+import { getProducts } from "../api/apiService";
 
 export default function ProductPage() {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await getProducts();
+      setProducts(data);
+      setIsLoading(false);
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+      console.log(error.message);
+    }
+  };
+
   const { cart, addToCart, getItemCount } = useContext(CartContext);
 
   const navigation = useNavigation();
@@ -54,9 +76,21 @@ export default function ProductPage() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.grid}>
-          {products.map((item) => (
-            <ProductItem key={item.id} item={item} onAdd={addToCart} />
-          ))}
+          {isLoading ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator color="green" size="large" />
+            </View>
+          ) : error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : (
+            <View style={styles.grid}>
+              {products.map((item) => (
+                <ProductItem key={item.id} item={item} onAdd={addToCart} />
+              ))}
+            </View>
+          )}
         </View>
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>All Exclusive</Text>
@@ -126,5 +160,22 @@ const styles = StyleSheet.create({
   },
   cartBtnContainerNotactive: {
     display: "none",
+  },
+  loaderContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+  errorContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+  errorText: {
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 20,
   },
 });

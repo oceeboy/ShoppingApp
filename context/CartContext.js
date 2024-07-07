@@ -24,7 +24,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.price, 0);
+    return cart.reduce(
+      (total, item) => total + item.current_price[0].NGN[0],
+      0
+    );
   };
 
   const getItemCount = () => {
